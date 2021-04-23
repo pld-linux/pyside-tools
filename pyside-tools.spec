@@ -1,14 +1,14 @@
 Summary:	PySide version of lupdate/uic/rcc tools
 Summary(pl.UTF-8):	Wersja PySide narzędzi lupdate/uic/rcc
 Name:		pyside-tools
-Version:	0.2.14
+Version:	0.2.15
 Release:	1
 License:	GPL v2 (lupdate, rcc), BSD or GPL v2 (uic)
 Group:		Development/Tools
-#Source0Download: http://qt-project.org/wiki/category:LanguageBindings::PySide::Downloads
-Source0:	http://qt-project.org/uploads/pyside/%{name}-%{version}.tar.bz2
-# Source0-md5:	0a683e1dc426df5834cb1e540d0c6e3f
-URL:		http://qt-project.org/PySide/
+#Source0Download: https://github.com/PySide/Tools/releases/
+Source0:	https://github.com/pyside/Tools/archive/%{version}/Tools-%{version}.tar.gz
+# Source0-md5:	e542b9536bd9d35599ede225c9311cc8
+URL:		https://github.com/PySide/Tools
 BuildRequires:	QtCore-devel >= 4.5.0
 BuildRequires:	QtGui-devel >= 4.5.0
 BuildRequires:	QtXml-devel >= 4.5.0
@@ -17,6 +17,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	python-PySide-devel >= 1.0.6
 BuildRequires:	python-devel >= 1:2.6
 BuildRequires:	sed >= 4.0
+BuildRequires:	shiboken >= 1.1.1
 Requires:	QtCore >= 4.5.0
 Requires:	QtGui >= 4.5.0
 Requires:	QtXml >= 4.5.0
@@ -32,14 +33,16 @@ Ten pakiet zawiera przeznaczone dla PySide wersje narzędzi lupdate,
 rcc oraz uic.
 
 %prep
-%setup -q
+%setup -q -n Tools-%{version}
 
 %{__sed} -i -e '1s,^#!/usr/bin/env python,/usr/bin/python,' pyside-uic
 
 %build
 mkdir build
 cd build
-%cmake ..
+%cmake .. \
+	-DPYTHON_BASENAME=-python%{py_ver} \
+	-DPYTHON_SUFFIX=-python%{py_ver}
 
 %{__make}
 
@@ -62,7 +65,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog 
+%doc AUTHORS LICENSE-uic
 %attr(755,root,root) %{_bindir}/pyside-lupdate
 %attr(755,root,root) %{_bindir}/pyside-rcc
 %attr(755,root,root) %{_bindir}/pyside-uic
